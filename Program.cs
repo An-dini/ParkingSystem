@@ -50,17 +50,18 @@ class Program
                 {
                     slotParking = new List<Parking>();
                     Console.WriteLine($"Created a parking lot with {parkingCapacity} slots");
+                    Console.WriteLine();
                 }
                 else
                 {
-                    Console.WriteLine("Invalid format. Try: create_parking_lot <capacity>");
+                    Console.WriteLine("Invalid format. Try: create_parking_lot <capacity>\n");
                 }
             }
             else if (cmd.StartsWith("park"))
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
 
                 else
@@ -79,6 +80,7 @@ class Program
                                 {
                                     slotParking.Add(new Parking(i, parts[1], parts[2], parts[3]));
                                     Console.WriteLine($"Allocated slot number: {i}");
+                                    Console.WriteLine();
                                     break;
 
                                 }
@@ -90,13 +92,13 @@ class Program
                         }
                         else
                         {
-                            Console.WriteLine("Sorry, parking lot is full");
+                            Console.WriteLine("Sorry, parking lot is full\n");
                         }
                     }
 
                     else
                     {
-                        Console.WriteLine("Invalid format. Try: park <registration number> <colour> <vehicle type>");
+                        Console.WriteLine("Invalid format. Try: park <registration number> <colour> <vehicle type>\n");
                     }
                 }
             }
@@ -104,7 +106,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -116,7 +118,7 @@ class Program
                         {
                             slotParking.Remove(parkingLeave);
                             Console.WriteLine($"Slot number {num} is free");
-
+                            Console.WriteLine();
                         }
                         else
                         {
@@ -125,7 +127,7 @@ class Program
                     }
                     else
                     {
-                        Console.WriteLine("Invalid format. Try: leave <slot number>");
+                        Console.WriteLine("Invalid format. Try: leave <slot number>\n");
                     }
                 }
             }
@@ -133,7 +135,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -148,6 +150,7 @@ class Program
                         {
                             Console.WriteLine(vehicle);
                         }
+                        Console.WriteLine();
                     }
                 }
             }
@@ -155,7 +158,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -171,15 +174,16 @@ class Program
                                 findResult.Add(vehicle.RegNumber);
                             }
                             Console.WriteLine(findResult.Count);
+                            Console.WriteLine();
                         }
                         else
                         {
-                            Console.WriteLine("Not found");
+                            Console.WriteLine("Not Found \n");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid format. Try: type_of_vehicles <type>");
+                        Console.WriteLine("Invalid format. Try: type_of_vehicles <type>\n");
                     }
                 }
             }
@@ -187,7 +191,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -203,15 +207,16 @@ class Program
                                 findResult.Add(vehicle.RegNumber);
                             }
                             Console.WriteLine(string.Join(", ", findResult));
+                            Console.WriteLine();
                         }
                         else
                         {
-                            Console.WriteLine("Not Found");
+                            Console.WriteLine("Not Found \n");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid format. Try: registration_numbers_for_vehicles_with_colour <colour>");
+                        Console.WriteLine("Invalid format. Try: registration_numbers_for_vehicles_with_colour <colour>\n");
                     }
                 }
             }
@@ -219,7 +224,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -235,15 +240,16 @@ class Program
                                 findResult.Add(vehicle.Slot.ToString());
                             }
                             Console.WriteLine(string.Join(", ", findResult));
+                            Console.WriteLine();
                         }
                         else
                         {
-                            Console.WriteLine("Not Found");
+                            Console.WriteLine("Not Found \n");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid format. Try: slot_numbers_for_vehicles_with_colour <colour>");
+                        Console.WriteLine("Invalid format. Try: slot_numbers_for_vehicles_with_colour <colour> \n");
                     }
                 }
             }
@@ -251,7 +257,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -265,15 +271,16 @@ class Program
                             {
                                 Console.WriteLine(vehicle.Slot);
                             }
+                            Console.WriteLine();
                         }
                         else
                         {
-                            Console.WriteLine("Not Found");
+                            Console.WriteLine("Not Found \n");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Invalid format. Try: slot_number_for_registration_number <Registration number>");
+                        Console.WriteLine("Invalid format. Try: slot_number_for_registration_number <Registration number> \n");
                     }
                 }
             }
@@ -281,7 +288,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -299,10 +306,11 @@ class Program
                             findResult.Add(vehicle.RegNumber);
                         }
                         Console.WriteLine(string.Join(", ", findResult));
+                        Console.WriteLine();
                     }
                     else
                     {
-                        Console.WriteLine("Not Found");
+                        Console.WriteLine("Not Found \n");
                     }
                 }
             }
@@ -310,7 +318,7 @@ class Program
             {
                 if (parkingCapacity == 0)
                 {
-                    Console.WriteLine("Please create parking lot.");
+                    Console.WriteLine("Please create parking lot. \n");
                 }
                 else
                 {
@@ -328,10 +336,11 @@ class Program
                             findResult.Add(vehicle.RegNumber);
                         }
                         Console.WriteLine(string.Join(", ", findResult));
+                        Console.WriteLine();
                     }
                     else
                     {
-                        Console.WriteLine("Not Found");
+                        Console.WriteLine("Not Found \n");
                     }
                 }
             }
