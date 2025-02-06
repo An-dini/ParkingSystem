@@ -5,24 +5,35 @@ class Program
 {
     class Parking
     {
-        public int Slot {get; set;}
-        public string RegNumber {get; set;}
-        public string Type {get; set;}
-        public string Colour {get; set;}
+        public int Slot { get; set; }
+        public string RegNumber { get; set; }
+        public string Type { get; set; }
+        public string Colour { get; set; }
 
         public Parking(int slot, string regNumber, string colour, string type)
         {
             Slot = slot;
-            RegNumber = regNumber;
-            Colour = colour;
-            Type = type;
+            RegNumber = regNumber.ToUpper();
+            Colour = CapitalizeInput(colour);
+            Type = CapitalizeInput(type);
         }
 
         public override string ToString()
         {
-            return$"{Slot}\t{RegNumber}\t{Type}\t{Colour}" ;
+            return $"{Slot}\t{RegNumber}\t{Type}\t{Colour}";
+        }
+
+        private string CapitalizeInput(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return str;
+            }
+
+            return str.Substring(0, 1).ToUpper() + str.Substring(1).ToLower();
         }
     }
+
     static void Main(string[] args)
     {
         List<Parking> slotParking = new List<Parking>();
@@ -31,7 +42,7 @@ class Program
 
         do
         {
-            cmd = Console.ReadLine();
+            cmd = Console.ReadLine().ToLower();
             if (cmd.StartsWith("create_parking_lot"))
             {
                 string[] parts = cmd.Split(' ');
@@ -40,91 +51,103 @@ class Program
                     slotParking = new List<Parking>();
                     Console.WriteLine($"Created a parking lot with {parkingCapacity} slots");
                 }
-                else 
+                else
                 {
                     Console.WriteLine("Invalid format. Try: create_parking_lot <capacity>");
                 }
             }
-            else if(cmd.StartsWith("park"))
+            else if (cmd.StartsWith("park"))
             {
                 if (parkingCapacity == 0)
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-                
-                string[] parts = cmd.Split(' ');
 
-                if (parts.Length == 4)
+                else
                 {
-                    if (slotParking.Count < parkingCapacity)
+                    string[] parts = cmd.Split(' ');
+
+                    if (parts.Length == 4)
                     {
-                        for (int i = 1; i <= slotParking.Count+1; i++)
+                        if (slotParking.Count < parkingCapacity)
                         {
-                            var findNum = slotParking.Find(p => p.Slot == i);
-
-                            if (findNum == null)
+                            for (int i = 1; i <= slotParking.Count + 1; i++)
                             {
-                                slotParking.Add( new Parking(i, parts[1], parts[2], parts[3]));
-                                Console.WriteLine($"Allocated slot number: {i}");   
-                                break;
+                                var findNum = slotParking.Find(p => p.Slot == i);
 
+                                if (findNum == null)
+                                {
+                                    slotParking.Add(new Parking(i, parts[1], parts[2], parts[3]));
+                                    Console.WriteLine($"Allocated slot number: {i}");
+                                    break;
+
+                                }
+                                else
+                                {
+                                    continue;
+                                }
                             }
-                            else
-                            {
-                                continue;
-                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Sorry, parking lot is full");
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Invalid format. Try: park <registration number> <colour> <vehicle type>");
+                    }
+                }
+            }
+            else if (cmd.StartsWith("leave"))
+            {
+                if (parkingCapacity == 0)
+                {
+                    Console.WriteLine("Please create parking lot.");
+                }
+                else
+                {
+                    string[] parts = cmd.Split(' ');
+                    if (parts.Length == 2 && int.TryParse(parts[1], out int num))
+                    {
+                        var parkingLeave = slotParking.Find(p => p.Slot == num);
+                        if (parkingLeave != null)
+                        {
+                            slotParking.Remove(parkingLeave);
+                            Console.WriteLine($"Slot number {num} is free");
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("No Found");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Sorry, parking lot is full");
+                        Console.WriteLine("Invalid format. Try: leave <slot number>");
                     }
                 }
-
-                else 
-                {
-                    Console.WriteLine("Invalid format. Try: park <registration number> <colour> <vechile type>");
-                }
             }
-            else if(cmd.StartsWith("leave"))
+            else if (cmd.StartsWith("status"))
             {
                 if (parkingCapacity == 0)
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-                
-                string[] parts = cmd.Split(' ');
-                if (parts.Length == 2 && int.TryParse(parts[1], out int num))
+                else
                 {
-                    var parkingLeave = slotParking.Find(p => p.Slot == num);
-                    if (parkingLeave != null)
+                    Console.WriteLine("Slot\tNo.\t\tType\tColour");
+                    if (slotParking.Count == 0)
                     {
-                        slotParking.Remove(parkingLeave);
-                        Console.WriteLine($"Slot number {num} is free");
-                        
+                        Console.WriteLine("\tno one has parked yet");
                     }
                     else
                     {
-                        Console.WriteLine("No Found");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format. Try: leave <slot number>");
-                }
-            }
-            else if(cmd.StartsWith("status"))
-            {
-                Console.WriteLine("Slot\tNo.\t\tType\tColour");
-                if (slotParking.Count == 0)
-                {
-                    Console.WriteLine("Parking is free");
-                }
-                else
-                {
-                    foreach (var vechile in slotParking.OrderBy(p => p.Slot))
-                    {
-                        Console.WriteLine(vechile);
+                        foreach (var vehicle in slotParking.OrderBy(p => p.Slot))
+                        {
+                            Console.WriteLine(vehicle);
+                        }
                     }
                 }
             }
@@ -134,28 +157,30 @@ class Program
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-
-                string[] parts = cmd.Split(' ');
-                if (parts.Length == 2)
+                else
                 {
-                    List<string> findResult = new List<string>();
-                    var result = slotParking.FindAll(p => p.Type.ToLower() == parts[1].ToLower());
-                    if (result.Count != 0)
+                    string[] parts = cmd.Split(' ');
+                    if (parts.Length == 2)
                     {
-                        foreach (var vechile in result)
+                        List<string> findResult = new List<string>();
+                        var result = slotParking.FindAll(p => p.Type.ToLower() == parts[1].ToLower());
+                        if (result.Count != 0)
                         {
-                            findResult.Add(vechile.RegNumber);
-                        }
+                            foreach (var vehicle in result)
+                            {
+                                findResult.Add(vehicle.RegNumber);
+                            }
                             Console.WriteLine(findResult.Count);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not found");
+                        }
                     }
                     else
                     {
-                    Console.WriteLine("Not found");
+                        Console.WriteLine("Invalid format. Try: type_of_vehicles <type>");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format. Try: type_of_vehicles <type>");
                 }
             }
             else if (cmd.StartsWith("registration_numbers_for_vehicles_with_colour"))
@@ -164,28 +189,30 @@ class Program
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-
-                string[] parts = cmd.Split(' ');
-                if (parts.Length == 2)
+                else
                 {
-                    List<string> findResult = new List<string>();
-                    var result = slotParking.FindAll(p => p.Colour.ToLower() == parts[1].ToLower());
-                    if (result.Count != 0)
+                    string[] parts = cmd.Split(' ');
+                    if (parts.Length == 2)
                     {
-                        foreach (var vechile in result)
+                        List<string> findResult = new List<string>();
+                        var result = slotParking.FindAll(p => p.Colour.ToLower() == parts[1].ToLower());
+                        if (result.Count != 0)
                         {
-                            findResult.Add(vechile.RegNumber);
-                        }
+                            foreach (var vehicle in result)
+                            {
+                                findResult.Add(vehicle.RegNumber);
+                            }
                             Console.WriteLine(string.Join(", ", findResult));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not Found");
+                        }
                     }
                     else
                     {
-                    Console.WriteLine("Not Found");
+                        Console.WriteLine("Invalid format. Try: registration_numbers_for_vehicles_with_colour <colour>");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format. Try: registration_numbers_for_vehicles_with_colour <colour>");
                 }
             }
             else if (cmd.StartsWith("slot_numbers_for_vehicles_with_colour"))
@@ -194,28 +221,30 @@ class Program
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-
-                string[] parts = cmd.Split(' ');
-                if (parts.Length == 2)
+                else
                 {
-                    List<string> findResult = new List<string>();
-                    var result = slotParking.FindAll(p => p.Colour.ToLower() == parts[1].ToLower());
-                    if (result.Count != 0)
+                    string[] parts = cmd.Split(' ');
+                    if (parts.Length == 2)
                     {
-                        foreach (var vechile in result)
+                        List<string> findResult = new List<string>();
+                        var result = slotParking.FindAll(p => p.Colour.ToLower() == parts[1].ToLower());
+                        if (result.Count != 0)
                         {
-                            findResult.Add(vechile.Slot.ToString());
-                        }
+                            foreach (var vehicle in result)
+                            {
+                                findResult.Add(vehicle.Slot.ToString());
+                            }
                             Console.WriteLine(string.Join(", ", findResult));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not Found");
+                        }
                     }
                     else
                     {
-                    Console.WriteLine("Not Found");
+                        Console.WriteLine("Invalid format. Try: slot_numbers_for_vehicles_with_colour <colour>");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format. Try: slot_numbers_for_vehicles_with_colour <colour>");
                 }
             }
             else if (cmd.StartsWith("slot_number_for_registration_number"))
@@ -224,26 +253,28 @@ class Program
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-
-                string[] parts = cmd.Split(' ');
-                if (parts.Length == 2)
+                else
                 {
-                    var result = slotParking.FindAll(p => p.RegNumber.ToLower() == parts[1].ToLower());
-                    if (result.Count != 0)
+                    string[] parts = cmd.Split(' ');
+                    if (parts.Length == 2)
                     {
-                        foreach (var vechile in result)
+                        var result = slotParking.FindAll(p => p.RegNumber.ToLower() == parts[1].ToLower());
+                        if (result.Count != 0)
                         {
-                            Console.WriteLine(vechile.Slot);
+                            foreach (var vehicle in result)
+                            {
+                                Console.WriteLine(vehicle.Slot);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not Found");
                         }
                     }
                     else
                     {
-                    Console.WriteLine("Not Found");
+                        Console.WriteLine("Invalid format. Try: slot_number_for_registration_number <Registration number>");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid format. Try: slot_number_for_registration_number <Registration number>");
                 }
             }
             else if (cmd.StartsWith("registration_numbers_for_vehicles_with_ood_plate"))
@@ -252,11 +283,10 @@ class Program
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-
                 else
                 {
                     List<string> findResult = new List<string>();
-                    var result = slotParking.FindAll(p => 
+                    var result = slotParking.FindAll(p =>
                     {
                         int nReg = int.Parse(p.RegNumber.Split('-')[1]);
                         return nReg % 2 != 0;
@@ -264,15 +294,15 @@ class Program
 
                     if (result.Count != 0)
                     {
-                        foreach (var vechile in result)
+                        foreach (var vehicle in result)
                         {
-                            findResult.Add(vechile.RegNumber);
+                            findResult.Add(vehicle.RegNumber);
                         }
-                            Console.WriteLine(string.Join(", ", findResult));
+                        Console.WriteLine(string.Join(", ", findResult));
                     }
                     else
                     {
-                    Console.WriteLine("Not Found");
+                        Console.WriteLine("Not Found");
                     }
                 }
             }
@@ -282,11 +312,10 @@ class Program
                 {
                     Console.WriteLine("Please create parking lot.");
                 }
-
                 else
                 {
                     List<string> findResult = new List<string>();
-                    var result = slotParking.FindAll(p => 
+                    var result = slotParking.FindAll(p =>
                     {
                         int nReg = int.Parse(p.RegNumber.Split('-')[1]);
                         return nReg % 2 == 0;
@@ -294,15 +323,15 @@ class Program
 
                     if (result.Count != 0)
                     {
-                        foreach (var vechile in result)
+                        foreach (var vehicle in result)
                         {
-                            findResult.Add(vechile.RegNumber);
+                            findResult.Add(vehicle.RegNumber);
                         }
-                            Console.WriteLine(string.Join(", ", findResult));
+                        Console.WriteLine(string.Join(", ", findResult));
                     }
                     else
                     {
-                    Console.WriteLine("Not Found");
+                        Console.WriteLine("Not Found");
                     }
                 }
             }
